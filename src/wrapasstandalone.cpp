@@ -56,6 +56,17 @@ int main(int argc, char **argv)
 
   auto plugin =
       freeaudio::clap_wrapper::standalone::mainCreatePlugin(entry, pid, pindex, 1, (char **)argv);
+
+  if (!plugin)
+  {
+    // As the Windows standalone does: the GUI and the audio below would read
+    // through a null plugin.
+    std::cerr << "Clap Standalone: Unable to create the plugin. The CLAP was found but did not "
+                 "provide '"
+              << pid << "'." << std::endl;
+    return 4;
+  }
+
   freeaudio::clap_wrapper::standalone::mainStartAudio();
 
 #if LIN && CLAP_WRAPPER_STANDALONE_X11

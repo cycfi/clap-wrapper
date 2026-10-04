@@ -326,6 +326,26 @@ static bool showingAudioError{false};
   auto plugin =
       freeaudio::clap_wrapper::standalone::mainCreatePlugin(entry, pid, pindex, 1, (char **)argv);
 
+  if (!plugin)
+  {
+    // The CLAP has no plugin with the id (or index) this standalone was built
+    // for. Say so, as the Windows standalone does, rather than read through
+    // the null plugin below.
+    LOGINFO("[ERROR] Unable to create the plugin '{}'", pid);
+    @autoreleasepool
+    {
+      NSAlert *alert = [[NSAlert alloc] init];
+      [alert setMessageText:@"Plugin Error"];
+      [alert setInformativeText:[NSString stringWithFormat:@"Unable to create the plugin. The CLAP "
+                                                           @"was found but did not provide '%s'.",
+                                                           pid.c_str()]];
+      [alert addButtonWithTitle:@"OK"];
+      [alert runModal];
+    }
+    [NSApp terminate:nil];
+    return;
+  }
+
   [[self window] orderFrontRegardless];
   [[self window] setDelegate:self];
 
