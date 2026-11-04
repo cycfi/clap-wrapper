@@ -140,12 +140,14 @@ function(make_clapfirst_plugins)
                 RESOURCE_DIRECTORY "${C1ST_RESOURCE_DIRECTORY}"
         )
         if (DEFINED C1ST_ASSET_OUTPUT_DIRECTORY)
+            # The generator expression stops multi-config generators from
+            # appending a per-config subdirectory.
             if (NOT WIN32)
                 set_target_properties(${CLAP_TARGET} PROPERTIES
-                        LIBRARY_OUTPUT_DIRECTORY ${C1ST_ASSET_OUTPUT_DIRECTORY})
+                        LIBRARY_OUTPUT_DIRECTORY "$<1:${C1ST_ASSET_OUTPUT_DIRECTORY}>")
             else ()
                 set_target_properties(${CLAP_TARGET} PROPERTIES
-                        LIBRARY_OUTPUT_DIRECTORY "${C1ST_ASSET_OUTPUT_DIRECTORY}/CLAP")
+                        LIBRARY_OUTPUT_DIRECTORY "$<1:${C1ST_ASSET_OUTPUT_DIRECTORY}/CLAP>")
             endif()
         endif()
         set_target_properties(${CLAP_TARGET} PROPERTIES BUNDLE TRUE MACOSX_BUNDLE TRUE)
