@@ -165,8 +165,7 @@ function(target_add_vst3_wrapper)
         macos_bundle_flag(TARGET ${V3_TARGET})
 
         if (NOT "${V3_ASSET_OUTPUT_DIRECTORY}" STREQUAL "")
-            set_target_properties(${VST3_TARGET} PROPERTIES
-                    LIBRARY_OUTPUT_DIRECTORY ${V3_ASSET_OUTPUT_DIRECTORY})
+            target_library_output_directory(${V3_TARGET} "${V3_ASSET_OUTPUT_DIRECTORY}")
         endif()
 
     elseif(UNIX)

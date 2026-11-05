@@ -266,6 +266,19 @@ function(guarantee_clap_wrapper_shared)
     endif()
 endfunction(guarantee_clap_wrapper_shared)
 
+# Put a target's library in DIRECTORY for every configuration. Multi-config
+# generators (Xcode, Visual Studio) append a per-config subdirectory to
+# LIBRARY_OUTPUT_DIRECTORY, but not to the per-config properties.
+function(target_library_output_directory TARGET DIRECTORY)
+    set_target_properties(${TARGET} PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY "${DIRECTORY}")
+    foreach (config IN LISTS CMAKE_CONFIGURATION_TYPES)
+        string(TOUPPER "${config}" config)
+        set_target_properties(${TARGET} PROPERTIES
+                LIBRARY_OUTPUT_DIRECTORY_${config} "${DIRECTORY}")
+    endforeach()
+endfunction(target_library_output_directory)
+
 # add a SetFile POST_BUILD for bundles if you aren't using xcode
 function(macos_bundle_flag)
     set(oneValueArgs TARGET)

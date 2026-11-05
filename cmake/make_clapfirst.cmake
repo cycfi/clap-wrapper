@@ -145,15 +145,7 @@ function(make_clapfirst_plugins)
             else ()
                 set(cod "${C1ST_ASSET_OUTPUT_DIRECTORY}/CLAP")
             endif()
-            set_target_properties(${CLAP_TARGET} PROPERTIES
-                    LIBRARY_OUTPUT_DIRECTORY "${cod}")
-            # Multi-config generators append a per-config subdirectory to
-            # LIBRARY_OUTPUT_DIRECTORY, but not to the per-config properties.
-            foreach (config IN LISTS CMAKE_CONFIGURATION_TYPES)
-                string(TOUPPER "${config}" config)
-                set_target_properties(${CLAP_TARGET} PROPERTIES
-                        LIBRARY_OUTPUT_DIRECTORY_${config} "${cod}")
-            endforeach()
+            target_library_output_directory(${CLAP_TARGET} "${cod}")
         endif()
         set_target_properties(${CLAP_TARGET} PROPERTIES BUNDLE TRUE MACOSX_BUNDLE TRUE)
 
@@ -219,8 +211,7 @@ function(make_clapfirst_plugins)
         endif()
 
         if (DEFINED C1ST_ASSET_OUTPUT_DIRECTORY)
-            set_target_properties(${AUV2_TARGET} PROPERTIES
-                    LIBRARY_OUTPUT_DIRECTORY ${C1ST_ASSET_OUTPUT_DIRECTORY})
+            target_library_output_directory(${AUV2_TARGET} "${C1ST_ASSET_OUTPUT_DIRECTORY}")
         endif()
 
         add_dependencies(${ALL_TARGET} ${AUV2_TARGET})
